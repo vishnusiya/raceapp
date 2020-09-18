@@ -1,0 +1,165 @@
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <title>Crystal Clear Management</title>
+  <link rel="shortcut icon"  href='{% static "images/favicon.png" %}'>
+
+  <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet" type="text/css">
+  <link href='{% static "css/metismenu.min.css" %}' rel="stylesheet" type="text/css">
+  <link href='{% static "css/icons.css" %}' rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href='{% static "css/lightgallery.css" %}'>
+  <link rel="stylesheet" href='{% static "css/alertify.css" %}'>
+
+  <link rel="stylesheet" href='{% static "css/fullcalendar.min.css" %}'>
+  <link href='{% static "css/style.css" %}' rel="stylesheet" type="text/css">
+  {% block link %}{% endblock %}
+  <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+  
+  <div id="wrapper" class="h-100">
+
+    <!-- Top Bar Start -->
+    <div class="topbar">
+
+      <!-- LOGO -->
+      <div class="topbar-left pt-md-4 pt-lg-4 pt-xl-4 pt-0">
+        <a href="/home" class="logo">
+          <span class="logo-sm">
+            <img src='{% static "images/logo-sm.png" %}' alt="">
+          </span>
+          <span class="logo-light">
+            <img src='{% static "images/logo-light.png" %}' alt="">
+          </span>
+          
+        </a>
+      </div>
+
+      <nav class="navbar-custom">
+        <ul class="list-inline menu-left mb-0 d-block d-lg-none d-xl-none">
+                        <li class="float-left">
+                            <button class="button-menu-mobile open-left waves-effect">
+                                <i class="mdi mdi-menu"></i>
+                            </button>
+                        </li>
+                        
+                    </ul>
+        
+        <p class="caption-text d-none d-lg-block d-xl-block">In a world of gray, CCM Provides clarity to all construction & facility projects.</p>
+        <ul class="navbar-right list-inline float-right mb-0 mt-3 d-flex align-items-center">
+          <li class="notification-list list-inline-item">
+            <div class="dropdown notification-list nav-pro-img">
+              <a class="arrow-none nav-user pr-2" role="button" aria-haspopup="false" aria-expanded="false">
+                <!-- <img data-bind="attr:{src: userprofile__profile_pic()}" alt="user" class="rounded"> -->
+
+                <!-- <img data-bind="attr:{src: '/media/'+userprofile__profile_pic()}" alt=""> -->
+                <!-- <img data-bind="attr:{src: '/media/'+userprofile__profile_pic()}" alt=""> -->
+              </a>
+              <!-- <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle"></i> Profile</a>
+                <a class="dropdown-item" href="#"><i class="mdi mdi-wallet"></i> My Wallet</a>
+                <a class="dropdown-item d-block" href="#"><span class="badge badge-success float-right">11</span><i class="mdi mdi-settings"></i> Settings</a>
+                <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline"></i> Lock screen</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-danger" href="#"><i class="mdi mdi-power text-danger"></i> Logout</a>
+              </div> -->
+            </div>
+          </li>
+          <li class="list-inline-item d-flex align-items-center mr-0">
+            <p class="font-15 mb-0" style="line-height: 16px;">{{user.username}}</p>
+            <!-- <small>Admin</small> -->
+          </li>
+          <li class="list-inline-item d-flex align-items-center">
+            <a class="bg-transparent dropdown-item font-20 pl-4 pointer" data-bind="click: userlogout"><i class="mdi mdi-power text-white"></i></a>
+            <!-- <a class="bg-transparent dropdown-item font-20 pl-4" href="/account/logout/"><i class="mdi mdi-power text-white"></i></a> -->
+          </li>
+
+        </ul>
+
+       
+
+      </nav>
+
+    </div>
+    <!-- Top Bar End -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="left side-menu">
+      <div class="" id="remove-scroll" style="overflow: auto; height: 100%;">
+        <!-- slimscroll-menu -->
+        <!--- Sidemenu -->
+        <div id="sidebar-menu" class="order-updated">
+          <!-- Left Menu Start -->
+          <ul class="metismenu" id="side-menu">
+            <li>
+              <a href="/query/search/"><span>Query Search</span></a>
+            </li>           
+          </ul>
+
+        </div>
+          <!-- Sidebar -->
+        <div class="clearfix"></div>
+      </div>
+        <!-- Sidebar -left -->
+
+    </div>
+      <!-- Left Sidebar End -->
+    
+    <div class="content-page">
+      {% block body %}{% endblock %}
+    </div>
+  </div>
+  <!-- <div class="loader-bg d-none">
+      <div class="loader">Loading...</div>
+    </div> -->
+
+    <div class="loader-bg d-none">
+      <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+
+    <div class="modal fade error-modal" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="loginLabel">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+       <div class="modal-content">
+         <div class="modal-body text-center">
+           <span id="errorMessage">Error</span>
+         </div>
+         <div class="modal-footer text-center">
+           <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+         </div>
+       </div>
+     </div>
+    </div>
+
+
+   
+    
+    <script src='{% static "js/jquery.min.js" %}'></script>
+     <script src='{% static "js/jQuery-3.4.1.js" %}'></script>
+    <script src='{% static "js/bootstrap.bundle.min.js" %}'></script>
+    <script src='{% static "js/metismenu.min.js" %}'></script>
+    <script src='{% static "js/jquery.slimscroll.js" %}'></script>
+    <script src='{% static "js/waves.min.js" %}'></script>
+    <script src='{% static "js/lightgallery-all.min.js" %}'></script>
+    <script src='{% static "js/alertify.js" %}'></script>
+    <script src='{% static "js/alertify-init.js" %}'></script>
+    <!-- App js -->
+    <script src='{% static "js/app.js"  %}'></script>
+    <script src='{% static "js/knockout-3.4.2.js" %}'></script>
+    <script src='{% static "js/custom/base.js" %}'></script>
+    <script>
+      function userlogout() {
+        location.href = '/logout/'
+      }
+
+    </script>
+    {% block script %}{% endblock %}
+</body>
+
+</html>

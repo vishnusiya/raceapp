@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+  <link rel="stylesheet" href='{% static "css/daterangepicker.css" %}'>
+  <link rel="stylesheet" href='{% static "css/select2.min.css" %}'>
+  <link rel="stylesheet" href='{% static "css/bootstrap-multiselect.css" %}'>
+  <link href='{% static "css/flags.css" %}' rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Clients & Tickets{% endblock %}
+{% block page_css %}{% endblock %}
+{% block body %}
+      
+  <!-- <div class="content main-page"> -->
+    <form class="w-100" id="resetPassword">
+      <div class="row mt-3">
+        <h4 class="w-100 font-16 pl-3 mt-3 mb-3">Query Search</h4>
+        <h1 class="w-100 font-16 pl-3 mt-3 mb-3">https://report.racenet.com.au/templates/HJHHcCdef?meeting=devonport-20200913&race=toorak-toff-at-kingsley-park-benchmark-6-race-1</h1>
+        <div class="col-4">
+          <label class="font-weight-normal font-14 mb-1">Current Url</label>
+          <input type="text" class="form-control" id="currentPassword" name="currentPassword" data-bind="value: page_url">
+        </div> 
+        <div class="col-4">
+          <button type="button" class="btn btn-primary mt-4" data-bind="click: querySearchSubmit">Apply</button>
+        </div>
+
+      </div>
+    </form> 
+  <!-- </div> -->
+
+
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-11">
+          <div class="card">
+            <div class="card-body p-4"> 
+     
+              <div class="table-responsive mt-3">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                  <!--     <th class="border-0 text-center">Player Name</th>
+                      <th class="border-0 text-center">Player Indux Number</th>
+                      <th class="border-0 text-center">Player Number</th>
+                      <th class="border-0 text-center">Player Weight</th>
+                      <th class="border-0 text-center">Player Rating</th> -->
+                    <!-- </tr> -->
+
+                    <!-- <tr> -->
+                      <th class="border-0 text-center">Race Date</th>
+                      <th class="border-0 text-center">Race Class</th>
+                      <th class="border-0 text-center">Race Position</th>
+                      <th class="border-0 text-center">Race Distance</th>
+                      <th class="border-0 text-center">Race Rating</th>
+                      <th class="border-0 text-center">Race Weight</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+                    <!-- ko foreach : playersList-->                    
+                     <!-- ko foreach : race_lst-->
+                    <tr>
+        
+
+                      <td class="text-center border-0"><!-- ko text: race_date --><!-- /ko --></td>             
+                      <td class="border-0 text-center"><!-- ko text: race_class --><!-- /ko --></td>
+                      <td class="border-0 text-center"><!-- ko text: race_position --><!-- /ko --></td>
+                      <td class="text-center border-0"><!-- ko text: race_distance --><!-- /ko --></td>
+                      <td class="text-center border-0"><!-- ko text: race_rating --><!-- /ko --></td>
+                      <td class="text-center border-0"><!-- ko text: race_weight --><!-- /ko --></td>
+                    </tr>
+                    <!-- /ko -->
+                    <!-- /ko -->                   
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <div class="loader-bg d-none">
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+  </div>
+
+    <div class="modal fade error-modal" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="loginLabel">
+      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+       <div class="modal-content">
+         <div class="modal-body text-center">
+           <span id="errorMessage">Error</span>
+         </div>
+         <div class="modal-footer text-center">
+           <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+         </div>
+       </div>
+     </div>
+    </div>
+
+
+
+    <!-- jQuery  -->
+{% endblock %}
+{% block script %}
+
+    <script src='{% static "js/moment.min.js" %}'></script>
+    <script src='{% static "js/moment-timezone.min.js" %}'></script>
+    <script src='{% static "js/moment-timezone-with-data.js" %}'></script>
+    <script src='{% static "js/daterangepicker.min.js" %}'></script>
+    <script src='{% static "js/jquery.validate.min.js" %}'></script>
+    <script src='{% static "js/select2.min.js" %}'></script>
+    <script src='{% static "js/jquery.flagstrap.js"%}'></script>
+    <script src='{% static "js/bootstrap-multiselect.js" %}'></script>
+    <script src='{% static "js/custom/admin/query-search.js" %}'></script>
+    {% endblock %}
