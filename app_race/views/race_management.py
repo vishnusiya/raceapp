@@ -75,6 +75,7 @@ def api_player_list_get(request):
                 player_weight =player.player_weight.replace('kg', '')
             player_dict = {}
             player_dict['player_id'] = player.id
+            player_dict['horse_number'] = player.horse_number
             player_dict['player_name'] = player.player_name
             player_dict['player_idex_num'] = player.player_idex_num
             player_dict['player_num'] = player.player_num
@@ -82,8 +83,8 @@ def api_player_list_get(request):
             player_dict['player_rating'] = player.player_rating
 
             race_lst = []
-            races = Race.objects.filter(is_active=True,player_name=player.player_name).order_by('id')
-            for race in races:
+            races = Race.objects.filter(is_active=True,player_name=player.player_name).order_by('race_date')
+            for index,race in enumerate(races):
                 bad_chars = ['[', ']', "'", "*"]   
                 race_class = race.race_class                  
                 race_class = ''.join(i for i in race_class if not i in bad_chars)
@@ -93,42 +94,45 @@ def api_player_list_get(request):
                 race_class = race_class.replace('Circuit', '')
                 race_class = race_class.replace('Course', '')
 
-                test_string = "Hcp"  
-                # print("The original string : " + str(test_string))                   
-                res = isinstance(test_string, str)                   
-                # print("Is variable a string ? : " + str(res)) 
-                if res == True:
-                    race_class = race_class
-                else:
-                    race_class = 'N/A'
+                # bad_chars = ['[', ']', "'", '"']   
+                # race_rating = race.race_rating                  
+                # race_rating = ''.join(i for i in race_rating if not i in bad_chars) 
 
+                # bad_chars = ['[', ']', "'", '"',","]   
+                # race_weight = race.race_weight                
+                # race_weight = ''.join(i for i in race_weight if not i in bad_chars)    
 
-                bad_chars = ['[', ']', "'", '"']   
-                race_rating = race.race_rating                  
-                race_rating = ''.join(i for i in race_rating if not i in bad_chars) 
+                start_wgt = float(race.race_weight)
+                try:                    
+                    end_wgt = float(races[index+1].race_weight)
+                except:
+                    start_wgt = 0.0
+                    end_wgt = 0.0
+                wgt_diff = end_wgt - start_wgt  
 
-
-                bad_chars = ['[', ']', "'", '"',","]   
-                race_weight = race.race_weight                
-                race_weight = ''.join(i for i in race_weight if not i in bad_chars) 
-
-
-
-
-                
+                rating_diff = 0
+                if race.race_rating not in [None,'',[],'undefined']:
+                    start_rating = float(race.race_rating)
+                    try:                    
+                        end_rating = float(races[index+1].race_rating)
+                    except:
+                        start_rating = 0.0
+                        end_rating = 0.0
+                    rating_diff = end_rating - start_rating
 
                 race_dict = {}
                 race_dict['player_name'] = race.player_name
                 race_dict['race_class'] = str(race_class)
                 race_dict['race_position'] = race.race_position
                 race_dict['race_distance'] = race.race_distance
-                race_dict['race_rating'] = str(race_rating).upper()
-                race_dict['race_weight'] =  str(race_weight)
+                race_dict['race_rating'] = race.race_rating
+                race_dict['race_weight'] = str(("%.2f" % race.race_weight))    
                 race_dict['race_date'] = race.race_date
+                race_dict['wgt_diff'] = wgt_diff
+                race_dict['rating_diff'] = rating_diff
                 race_lst.append(race_dict)
             player_dict['race_lst'] = race_lst
             player_lst.append(player_dict)
-
 
         data_dict = {}
         data_dict['player_lst'] = player_lst
@@ -170,6 +174,7 @@ def api_create_player_details(request):
 
         ###Players Details
         items = page_data.find_all("div",class_ = "form-runner-details-main")
+        horse_number = [item.find(class_="number bold").get_text() for item in items]
         player_name = [item.find(class_="horseName bold").get_text() for item in items]
         player_idex_num = [item.find(class_="number bold").get_text() for item in items]
         player_num = [item.find(class_="horseNumber").get_text() for item in items]  
@@ -190,6 +195,7 @@ def api_create_player_details(request):
             with transaction.atomic():
                 for i in range(0,rng):
                     player = Player(
+                        horse_number = horse_number[i],
                         player_name = player_name[i],
                         player_idex_num = player_idex_num[i],
                         player_num = player_num[i],
@@ -217,6 +223,10 @@ def api_create_player_details(request):
                             array1 = re.findall(r'Rtg:.\w+', description)
                             return array1
                         race_rating = getRatings(description) 
+                        bad_chars = ['[', ']', "'", '"']   
+                        race_rating = ''.join(i for i in race_rating if not i in bad_chars) 
+                        race_rating = race_rating.replace('Rtg:', '')
+
 
                         ##split race_rating
                         code_value1 = description.split('(L:')[0]
@@ -249,6 +259,9 @@ def api_create_player_details(request):
                             return array2
                         race_weight = getWeight(code_value1) 
 
+
+                        bad_chars = ['[', ']', "'", '"',","]   
+                        race_weight = ''.join(i for i in race_weight if not i in bad_chars)   
 
 
                         if len(race_position) > 1:

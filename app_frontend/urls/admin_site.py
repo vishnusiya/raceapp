@@ -6,5 +6,5 @@ urlpatterns = [
   url(r'^$', admin_site.login_user),
   url(r'^login/$', admin_site.login_user),
   url(r'^logout/$', admin_site.logout_user),
-  url(r'^query/search/$', admin_site.querySearch),
+  url(r'^query/search/$', admin_site.query_search),
 ]

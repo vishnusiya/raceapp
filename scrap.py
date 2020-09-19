@@ -23,6 +23,7 @@ def create_player_details(data):
 
         #Players Details
         items = page_data.find_all("div",class_ = "form-runner-details-main")
+        horse_number = [item.find(class_="number bold").get_text() for item in items]
         player_name = [item.find(class_="horseName bold").get_text() for item in items]
         player_idex_num = [item.find(class_="number bold").get_text() for item in items]
         player_num = [item.find(class_="horseNumber").get_text() for item in items]  
@@ -39,10 +40,12 @@ def create_player_details(data):
         table_num_tr = len(table[1].find_all('tr'))
 
 
+
         rng = len(player_name)
         with transaction.atomic():
             for i in range(0,rng):
                 player = Player(
+                    horse_number = horse_number[i],
                     player_name = player_name[i],
                     player_idex_num = player_idex_num[i],
                     player_num = player_num[i],
@@ -56,6 +59,7 @@ def create_player_details(data):
 
             for j in range(0,table_len):
                 results = table[j].find_all('tr', attrs={'class':'form-row'})
+
 
                 for result in results: 
                     race_position = result.find('td', attrs={'class':'previousRunsLeftTableCell'}).text # result not results
@@ -130,6 +134,6 @@ def create_player_details(data):
 
 if __name__ == '__main__':
     data = {
-        'page_url': "https://report.racenet.com.au/templates/HJHHcCdef?meeting=devonport-20200913&race=toorak-toff-at-kingsley-park-benchmark-6-race-1",
+        'page_url': "https://report.racenet.com.au/templates/HJHHcCdef?meeting=belmont-20200919&race=free-entry-to-belmont-park-maiden-race-1",
     }
     create_player_details(data)

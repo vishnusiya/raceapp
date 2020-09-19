@@ -34,9 +34,8 @@ from django.contrib.auth import authenticate, login, logout
 
 
 @login_required
-def querySearch(request):
-    return render(request, 'admin/Querysearch.html')
-    # return render(request, 'admin/query-search.html')
+def query_search(request):
+    return render(request, 'admin/query_search.html')
 
 
 def login_user(request):

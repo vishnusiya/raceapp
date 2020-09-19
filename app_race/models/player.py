@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 ## Table for saving Horse details.
 class Player(models.Model):
+    horse_number = models.CharField(max_length=600,blank=True, null=True)
     player_name = models.CharField(max_length=600,blank=True, null=True)
     player_idex_num =models.CharField(max_length=600,blank=True, null=True)
     player_num = models.CharField(max_length=600,blank=True, null=True)
