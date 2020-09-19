@@ -83,7 +83,7 @@ def api_player_list_get(request):
             player_dict['player_rating'] = player.player_rating
 
             race_lst = []
-            races = Race.objects.filter(is_active=True,player_name=player.player_name).order_by('race_date')
+            races = Race.objects.filter(is_active=True,player_name=player.player_name).order_by('-race_date')
             for index,race in enumerate(races):
                 bad_chars = ['[', ']', "'", "*"]   
                 race_class = race.race_class                  
@@ -102,19 +102,20 @@ def api_player_list_get(request):
                 # race_weight = race.race_weight                
                 # race_weight = ''.join(i for i in race_weight if not i in bad_chars)    
 
-                start_wgt = float(race.race_weight)
+                end_wgt = float(race.race_weight)
                 try:                    
-                    end_wgt = float(races[index+1].race_weight)
+                    start_wgt = float(races[index+1].race_weight)
                 except:
                     start_wgt = 0.0
                     end_wgt = 0.0
-                wgt_diff = end_wgt - start_wgt  
+                wgt_diff = end_wgt - start_wgt 
+
 
                 rating_diff = 0
                 if race.race_rating not in [None,'',[],'undefined']:
-                    start_rating = float(race.race_rating)
+                    end_rating = float(race.race_rating)
                     try:                    
-                        end_rating = float(races[index+1].race_rating)
+                        start_rating = float(races[index+1].race_rating)
                     except:
                         start_rating = 0.0
                         end_rating = 0.0
@@ -131,8 +132,11 @@ def api_player_list_get(request):
                 race_dict['wgt_diff'] = wgt_diff
                 race_dict['rating_diff'] = rating_diff
                 race_lst.append(race_dict)
+            race_lst = sorted(race_lst, key=lambda k: k['race_date'],reverse=False)
             player_dict['race_lst'] = race_lst
             player_lst.append(player_dict)
+
+
 
         data_dict = {}
         data_dict['player_lst'] = player_lst
