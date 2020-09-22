@@ -59,60 +59,58 @@
     </div>
     </section>
 
-    <!-- Heading of the Race -->
-    <section class="mt-2">
-    <div id="race-heads">
-        <h1 id="head-main" ><!-- ko text: heading1 --><!-- /ko --> </h1><br>
-        <h2 id="head-main" ><!-- ko text: heading2 --><!-- /ko --></h2><br>
-    </div>
-    <section>
-   <!-- table -->
 
  <section id="tablesection">
-
-   <!-- ko foreach : playersList-->
+   <!-- ko foreach : reslultsList-->
     <div class="mr-3 ml-5" id="tablediv">
       <table class="table ">
-        <div class=""> <span id="player-name"><strong><!-- ko text: horse_number --><!-- /ko --><!-- ko text: player_name --><!-- /ko --></strong> </span></div>
+        <div class=""> <span id="player-name"><strong><!-- ko text: main_head --><!-- /ko --></strong> </span></div>
+        <div class=""> <span id="player-name"><strong><!-- ko text: main_subhead --><!-- /ko --></strong> </span></div>
         <div class="mt-2"></div>
           <thead class="thead-dark ">
            <tr>
-              <!-- <th>ID</th> -->
-              <th>Date</th>
-              <th>Position</th>
-              <th>Distance(m)</th>
-              <th>class</th>
-              <th>weight Difference(Kg)</th>
-              <th>weight(Kg)</th>
-              <th>Rating Difference</th>
-              <th>Rating</th>
+              <th>Pl</th>
+              <th>H.No</th>
+              <th>Horse/Pedigree</th>
+              <th>Desc</th>
+              <th>Trainer</th>
+              <th>Jockey</th>
+              <th>Wt</th>
+              <th>Al</th>
+              <th>Dr</th>
+              <th>Sh</th>
+              <th>Won By</th>
+              <th>Dist Win</th>
+              <th>Rtg</th>
+              <th>Odds</th>
+              <th>Time</th>
+              <th>Race No</th>
+              <th>Race key</th>
+              <th>Race Distance</th>
            <tr>
              <tbody>
-                <!-- ko foreach : race_lst-->    
-                <tr>
-                  <!-- <td>1</td> -->
-                  <td><!-- ko text: race_date --><!-- /ko --></td>
-                  <td><!-- ko text: race_position --><!-- /ko --></td>
+                <!-- ko foreach : race_detail_lst-->    
+               <tr>
+                  <td><!-- ko text: Pl --><!-- /ko --></td>
+                  <td><!-- ko text: h_no --><!-- /ko --></td>
+                  <td><!-- ko text: horse_pedigree --><!-- /ko --></td>
+                  <td><!-- ko text: desc --><!-- /ko --></td>
+                  <td><!-- ko text: trainer --><!-- /ko --></td>
+                  <td><!-- ko text: jockey --><!-- /ko --></td>
+                  <td><!-- ko text: wt --><!-- /ko --></td>
+                  <td><!-- ko text: al --><!-- /ko --></td>
+                  <td><!-- ko text: dr --><!-- /ko --></td>
+                  <td><!-- ko text: sh --><!-- /ko --></td>
+                  <td><!-- ko text: won_by --><!-- /ko --></td>
+                  <td><!-- ko text: dist_win --><!-- /ko --></td>
+                  <td><!-- ko text: rtg --><!-- /ko --></td>
+                  <td><!-- ko text: odds --><!-- /ko --></td>
+                  <td><!-- ko text: time --><!-- /ko --></td>
+                  <td><!-- ko text: raceno --><!-- /ko --></td>
+                  <td><!-- ko text: race_primarykey --><!-- /ko --></td>
                   <td><!-- ko text: race_distance --><!-- /ko --></td>
-                  <td><!-- ko text: race_class --><!-- /ko --></td>
-                  <td><!-- ko text: wgt_diff --><!-- /ko --></td>
-                  <td><!-- ko text: race_weight --><!-- /ko --></td>
-                  <td><!-- ko text: rating_diff --><!-- /ko --></td>
-                  <td>RTG:<!-- ko text: race_rating --><!-- /ko --></td>
                 </tr>
                 <!-- /ko -->
-                 <tr>
-                  <!-- <td>1</td> -->
-                  <td>Current Data</td>
-                  <td>N/A</td>
-                  <td>N/A</td>
-                  <td>N/A</td>
-                  <td><!-- ko text: player_weight --><!-- /ko --></td>
-                  <td><!-- ko text: player_weight --><!-- /ko --></td>
-                  <td><!-- ko text: player_rating --><!-- /ko --></td>
-                  <td><!-- ko text: player_rating --><!-- /ko --></td>
-                </tr>
-
         </tbody>
       </table>
     </div>
@@ -123,7 +121,7 @@
 <footer class="page-footer font-small blue footer-style">
 
   <!-- Copyright -->
-  <h6 class="w-100 font-16 pl-3 mt-3 mb-3">Eg: https://report.racenet.com.au/templates/HJHHcCdef?meeting=belmont-20200919&race=free-entry-to-belmont-park-maiden-race-1</h6>
+  <h6 class="w-100 font-16 pl-3 mt-3 mb-3">Eg: https://www.indiarace.com/Home/racingCenterEvent?venueId=3&event_date=2020-03-06&race_type=RESULTS</h6>
   <div class="footer-copyright text-center py-3 text-success " >© 2020 Copyright:
     <a href="#"> RIVIS Solutions</a>
   </div>

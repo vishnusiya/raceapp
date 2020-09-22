@@ -63,85 +63,48 @@ def user_login(request):
 
 @require_GET
 @login_required
-def api_player_list_get(request):
+def api_result_list_get(request):
     try:
         user = request.user
-        headings = list(Heading.objects.filter(is_active=True).values_list('heading',flat=True))
-        players = Player.objects.filter(is_active=True).order_by('id')
-        player_lst = []
-        for player in players:
-            player_weight = ''
-            if player.player_weight not in [None,'']:                
-                player_weight =player.player_weight.replace('kg', '')
-            player_dict = {}
-            player_dict['player_id'] = player.id
-            player_dict['horse_number'] = player.horse_number
-            player_dict['player_name'] = player.player_name
-            player_dict['player_idex_num'] = player.player_idex_num
-            player_dict['player_num'] = player.player_num
-            player_dict['player_weight'] = player_weight
-            player_dict['player_rating'] = player.player_rating
+        results = Result.objects.filter(is_active=True).order_by('id')
+        result_lst = []
+        for result in results:
+            result_dict = {}
+            result_dict['raceno'] = result.raceno
+            result_dict['race_primarykey'] = result.race_primarykey
+            result_dict['main_head'] = result.main_head
+            result_dict['main_subhead'] = result.main_subhead
+            result_dict['race_distance'] = result.race_distance
 
-            race_lst = []
-            races = Race.objects.filter(is_active=True,player_name=player.player_name).order_by('-race_date')
-            for index,race in enumerate(races):
-                bad_chars = ['[', ']', "'", "*"]   
-                race_class = race.race_class                  
-                race_class = ''.join(i for i in race_class if not i in bad_chars)
-                race_class = race_class.replace('Synthetic', '')
-                race_class = race_class.replace('True', '')
-                race_class = race_class.replace('Entire', '')
-                race_class = race_class.replace('Circuit', '')
-                race_class = race_class.replace('Course', '')
-
-                # bad_chars = ['[', ']', "'", '"']   
-                # race_rating = race.race_rating                  
-                # race_rating = ''.join(i for i in race_rating if not i in bad_chars) 
-
-                # bad_chars = ['[', ']', "'", '"',","]   
-                # race_weight = race.race_weight                
-                # race_weight = ''.join(i for i in race_weight if not i in bad_chars)    
-
-                end_wgt = float(race.race_weight)
-                try:                    
-                    start_wgt = float(races[index+1].race_weight)
-                except:
-                    start_wgt = 0.0
-                    end_wgt = 0.0
-                wgt_diff = end_wgt - start_wgt 
-
-
-                rating_diff = 0
-                if race.race_rating not in [None,'',[],'undefined']:
-                    end_rating = float(race.race_rating)
-                    try:                    
-                        start_rating = float(races[index+1].race_rating)
-                    except:
-                        start_rating = 0.0
-                        end_rating = 0.0
-                    rating_diff = end_rating - start_rating
-
-                race_dict = {}
-                race_dict['player_name'] = race.player_name
-                race_dict['race_class'] = str(race_class)
-                race_dict['race_position'] = race.race_position
-                race_dict['race_distance'] = race.race_distance
-                race_dict['race_rating'] = race.race_rating
-                race_dict['race_weight'] = str(("%.2f" % race.race_weight))    
-                race_dict['race_date'] = race.race_date
-                race_dict['wgt_diff'] = wgt_diff
-                race_dict['rating_diff'] = rating_diff
-                race_lst.append(race_dict)
-            race_lst = sorted(race_lst, key=lambda k: k['race_date'],reverse=False)
-            player_dict['race_lst'] = race_lst
-            player_lst.append(player_dict)
-
-
-
-        data_dict = {}
-        data_dict['player_lst'] = player_lst
-        data_dict['headings'] = headings
-        return HttpResponse(content=json.dumps(data_dict), status=200, content_type="application/json")
+            race_detail_lst = []
+            resultdetails = ResultDetails.objects.filter(is_active=True,main_head=result.main_head).order_by('id')
+            for index,resultdetail in enumerate(resultdetails):
+                result_details_dict = {}
+                result_details_dict['result_id'] = resultdetail.id
+                result_details_dict['Pl'] = resultdetail.Pl
+                result_details_dict['h_no'] = resultdetail.h_no
+                result_details_dict['horse_pedigree'] = resultdetail.horse_pedigree
+                result_details_dict['desc'] = resultdetail.desc
+                result_details_dict['trainer'] = resultdetail.trainer
+                result_details_dict['jockey'] = resultdetail.jockey
+                result_details_dict['wt'] = resultdetail.wt
+                result_details_dict['al'] = resultdetail.al
+                result_details_dict['dr'] = resultdetail.dr
+                result_details_dict['sh'] = resultdetail.sh
+                result_details_dict['won_by'] = resultdetail.won_by
+                result_details_dict['dist_win'] = resultdetail.dist_win
+                result_details_dict['rtg'] = resultdetail.rtg
+                result_details_dict['odds'] = resultdetail.odds
+                result_details_dict['time'] = resultdetail.time
+                result_details_dict['raceno'] = resultdetail.raceno
+                result_details_dict['race_primarykey'] = resultdetail.race_primarykey
+                result_details_dict['main_head'] = resultdetail.main_head
+                result_details_dict['main_subhead'] = resultdetail.main_subhead
+                result_details_dict['race_distance'] = resultdetail.race_distance
+                race_detail_lst.append(result_details_dict)
+            result_dict['race_detail_lst'] = race_detail_lst
+            result_lst.append(result_dict)
+        return HttpResponse(content=json.dumps(result_lst), status=200, content_type="application/json")
     except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         err = "\n".join(traceback.format_exception(*sys.exc_info()))
@@ -152,141 +115,127 @@ def api_player_list_get(request):
 
 @require_POST
 @login_required
-def api_create_player_details(request):
+def api_create_result_details(request):
     try:        
-        user=request.user
-        Player.objects.all().delete()
-        Race.objects.all().delete()
-        Heading.objects.all().delete()
-        
+        user=request.user      
         page_url = request.POST.get('page_url')     
         if page_url in [None,'','undefined']:
             return HttpResponse(content=json.dumps('Please Fill Page Url'), status=406, content_type="application/json")
         page = requests.get(page_url)
         page_data = BeautifulSoup(page.content,"html.parser")
+        total = page_data.find_all("div",class_ = "row winner_row")
+        total_race = len(total)
+        with transaction.atomic():
+            for i in range(1,total_race+1):
+                race_id = 'race-'+str((i))
+                datas = []
+                items = page_data.find_all("div",id = race_id)
+                table = items[0].find_all('table', attrs={'class':'result-table-new1'})
+                table_len = len(table)
+                for i in range(0,table_len):    
+                    thead = table[0].find_all('thead')
+                    tbody = table[0].find_all('tbody')
+                    rows1 = thead[0].find_all('tr')
+                    rows2 = tbody[0].find_all('tr')
 
-        ###Heading 
-        for heading in page_data.find_all(["h1", "h2"]):
-            heading = Heading(
-                heading = heading.text.strip(),
-                created_by = user,
-                modified_by = user,
-                )
-            heading.full_clean()
-            heading.save()
+                    for row in rows2:
+                        cols = row.find_all('td')
+                        cols = [ele.text.strip() for ele in cols]
+                        datas.append(cols)
+                        data_len = len(datas)
+
+                    #race number
+                    raceno_data = items[0].find('div',class_ ='side_num')
+                    raceno = raceno_data.find('h1').text
+                    race_primarykey = raceno_data.find('h5').text
+
+                    #race heading datas
+                    racehead_data = items[0].find('div',class_ ='center_heading')
+                    main_head = racehead_data.find('h2').text
+                    main_subhead = racehead_data.find('h3').text
+
+                    #race  distance
+                    racetime_data = items[0].find('div',class_ ='archive_time')  
+                    race_distance = racetime_data.find('h4').text
 
 
-        ###Players Details
-        items = page_data.find_all("div",class_ = "form-runner-details-main")
-        horse_number = [item.find(class_="number bold").get_text() for item in items]
-        player_name = [item.find(class_="horseName bold").get_text() for item in items]
-        player_idex_num = [item.find(class_="number bold").get_text() for item in items]
-        player_num = [item.find(class_="horseNumber").get_text() for item in items]  
-        player_weight = [item.find(class_="horseWeight").get_text() for item in items]
-        player_rating = [item.find(class_="RTG").get_text() for item in items]
-        #previous Datas   
-
-
-        table = page_data.find_all("table",class_ = "runsTable margin-top-10")
-        if table not in [None,'',[]]:
-            table_len = len(table)
-            table_type = type(table)
-            table_index = type(table[1])
-            table_num_tr = len(table[1].find_all('tr'))
-
-
-            rng = len(player_name)
-            with transaction.atomic():
-                for i in range(0,rng):
-                    player = Player(
-                        horse_number = horse_number[i],
-                        player_name = player_name[i],
-                        player_idex_num = player_idex_num[i],
-                        player_num = player_num[i],
-                        player_weight = player_weight[i],
-                        player_rating = player_rating[i],
+                    result = Result(
+                        raceno = raceno,
+                        race_primarykey = race_primarykey,
+                        main_head = main_head,
+                        main_subhead = main_subhead,
+                        race_distance = race_distance,
                         created_by = user,
                         modified_by = user,
                         )
-                    player.full_clean()
-                    player.save()
-
-                for j in range(0,table_len):
-                    results = table[j].find_all('tr', attrs={'class':'form-row'})
-
-                    for result in results: 
-                        race_position = result.find('td', attrs={'class':'previousRunsLeftTableCell'}).text 
-                        description = result.find('td', attrs={'class':'align-top'}).text 
-
-                        ##race_date
-                        match = re.search(r'\d{2}/\d{2}/\d{4}', description)
-                        race_date = datetime.strptime(match.group(), '%d/%m/%Y').date()                 
-
-                        ##race_rating
-                        def getRatings(description): 
-                            array1 = re.findall(r'Rtg:.\w+', description)
-                            return array1
-                        race_rating = getRatings(description) 
-                        bad_chars = ['[', ']', "'", '"']   
-                        race_rating = ''.join(i for i in race_rating if not i in bad_chars) 
-                        race_rating = race_rating.replace('Rtg:', '')
+                    result.full_clean()
+                    result.save()
 
 
-                        ##split race_rating
-                        code_value1 = description.split('(L:')[0]
+                    for data in datas:
+                        #race number
+                        raceno_data = items[0].find('div',class_ ='side_num')
+                        raceno = raceno_data.find('h1').text
+                        race_primarykey = raceno_data.find('h5').text
+
+                        #race heading datas
+                        racehead_data = items[0].find('div',class_ ='center_heading')
+                        main_head = racehead_data.find('h2').text
+                        main_subhead = racehead_data.find('h3').text
+
+                        #race  distance
+                        racetime_data = items[0].find('div',class_ ='archive_time')  
+                        race_distance = racetime_data.find('h4').text
 
 
-                        ###getDistance
-                        def getDistance(code_value1): 
-                            array = re.findall(r'[0-9]+m ', code_value1)
-                            return array
-                        array = getDistance(code_value1) 
-                        race_distance = array[0]
+                        # main_head = main_head.strip()
+                        # main_head = main_head.replace(" ", "")
+                        # main_head = " ".join(main_head.split())
 
 
-                        def remove(string): 
-                            pattern = re.compile(r'\s+') 
-                            return re.sub(pattern, ' ', code_value1) 
-                        code_value1 = remove(code_value1) 
+                        #table Data
+                        Pl = data[0]
+                        h_no = data[1]
+                        horse_pedigree = data[2]
+                        desc = data[3]
+                        trainer = data[4]
+                        jockey = data[5]
+                        wt = data[6]
+                        al = data[7]
+                        dr = data[8]
+                        sh = data[9]
+                        won_by = data[10]
+                        dist_win = data[11]
+                        rtg = data[12]
+                        odds = data[13]
+                        time = data[14]
 
-
-                        ###getClass
-                        def getClass(code_value1): 
-                            array2 = re.findall(r'(?<=\dm)(.*)(?=\$)', code_value1)
-                            return array2
-                        race_class = getClass(code_value1) 
-
-
-                        ###getWeight
-                        def getWeight(code_value1): 
-                            array2 = re.findall(r'(?<=\))(.*)(?=\ )', code_value1)
-                            return array2
-                        race_weight = getWeight(code_value1) 
-
-
-                        bad_chars = ['[', ']', "'", '"',","]   
-                        race_weight = ''.join(i for i in race_weight if not i in bad_chars)   
-
-
-                        if len(race_position) > 1:
-                            def remove(string): 
-                                pattern = re.compile(r'\s+') 
-                                return re.sub(pattern, ' ', race_position) 
-                            race_position = remove(race_position)                           
-
-                            race = Race(
-                                player_name = player_name[j],
-                                race_class = race_class,
-                                race_position = race_position,
-                                race_distance = race_distance,
-                                race_rating = race_rating,
-                                race_weight = race_weight,
-                                race_date = race_date,
-                                created_by = user,
-                                modified_by = user,
-                                )
-                            race.full_clean()
-                            race.save()
+                        resultdetails = ResultDetails(
+                            Pl = Pl,
+                            h_no = h_no,
+                            horse_pedigree = horse_pedigree,
+                            desc = desc,
+                            trainer = trainer,
+                            jockey = jockey,
+                            wt = wt,
+                            al = al,
+                            dr = dr,
+                            sh = sh,
+                            won_by = won_by,
+                            dist_win = dist_win,
+                            rtg = rtg,
+                            odds = odds,
+                            time = time,
+                            raceno = raceno,
+                            race_primarykey = race_primarykey,
+                            main_head = main_head,
+                            main_subhead = main_subhead,
+                            race_distance = race_distance,
+                            created_by = user,
+                            modified_by = user,
+                            )
+                        resultdetails.full_clean()
+                        resultdetails.save()
             return HttpResponse(content=json.dumps('Player Details Create Successfully'), status=200, content_type="application/json")
         return HttpResponse(content=json.dumps("Server Error, URL Not Found"), status=406, content_type="application/json")
     except Exception as e:

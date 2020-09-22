@@ -3,7 +3,7 @@
   HRC.page_url = ko.observable('');
   HRC.heading1 = ko.observable('');
   HRC.heading2 = ko.observable('');
-  HRC.playersList = ko.observableArray([]);
+  HRC.reslultsList = ko.observableArray([]);
 
 
   HRC.getCookie = function (name) {
@@ -44,7 +44,7 @@
     formdata.append('page_url', HRC.page_url());
     $.ajax({
       method: 'POST',
-      url: '/apprace/create/player/details',
+      url: '/apprace/create/result/details',
       data: formdata,
       contentType: false,
       processData: false,
@@ -68,26 +68,25 @@
   }
 
 
-  HRC.getAllPlayers = function () {
+  HRC.getAllResults = function () {
     var csrftoken = HRC.getCookie('csrftoken');
     $.ajax({
       method: 'GET',
-      url: '/apprace/player/list/get',
+      url: '/apprace/result/list/get',
       dataType: 'json',
       beforeSend: function (xhr, settings) {
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
       })
       .done(function (d, textStatus, jqXHR) {
-        HRC.playersList([]);
-        for (var i = 0; i < d.player_lst.length; i++) {
-          HRC.playersList.push(d.player_lst[i]);
-        }            
+        console.log(d)
+        HRC.reslultsList([]);
+        for (var i = 0; i < d.length; i++) {
+          HRC.reslultsList.push(d[i]);
+        }        
 
-        HRC.heading1(d.headings[0])
-        HRC.heading2(d.headings[1])
+        console.log( HRC.reslultsList())    
 
-        console.log(HRC.heading1())
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
         jsonValue = jQuery.parseJSON( jqXHR.responseText );
@@ -103,7 +102,7 @@
 function init() {
 if (document.readyState == "interactive") {
     HRC.hideLoading();
-    HRC.getAllPlayers();
+    HRC.getAllResults();
     ko.applyBindings(HRC);
 }
 }
